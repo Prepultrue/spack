@@ -231,6 +231,9 @@ def get_package_permissions(spec):
 
     Package-specific settings take precedence over settings for ``all``"""
 
+    if hasattr(spec.package_class, "get_package_permissions"):
+        return getattr(spec.package, "get_package_permissions")(spec)
+
     # Get read permissions level
     for name in (spec.name, "all"):
         try:
@@ -279,6 +282,10 @@ def get_package_group(spec):
     """Return the unix group associated with the spec.
 
     Package-specific settings take precedence over settings for ``all``"""
+
+    if hasattr(spec.package_class, "get_package_group"):
+        return getattr(spec.package, "get_package_group")(spec)
+
     for name in (spec.name, "all"):
         try:
             group = spack.config.get("packages:%s:permissions:group" % name, "")
